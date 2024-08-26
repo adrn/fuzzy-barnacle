@@ -9,58 +9,62 @@ on:
   pull_request:
 
 jobs:
-  # test-gala:
-  #   name: Gala
-  #   runs-on: "ubuntu-latest"
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0
-
-  #     - name: Setup Linux
-  #       run: |
-  #         sudo apt-get install gsl-bin libgsl0-dev
-
-  #     - uses: actions/setup-python@v5
-  #       name: Install Python
-  #       with:
-  #         python-version: "3.11"
-
-  #     - name: Install Gala
-  #       run: |
-  #         pip install -v gala
-
-  #     - name: Test import
-  #       run: |
-  #         python -c "import gala.potential as gp; pot = gp.PowerLawCutoffPotential(m=1.0, alpha=1.0, r_c=1.0); print(pot.energy([1.0, 0.0, 0.0]))"
-  #         echo "Done"
-
-  check_skip_flags:
-    name: Check skip flags
-    runs-on: ubuntu-latest
-    outputs:
-      head-commit-message: ${{ steps.get_head_commit_message.outputs.HEAD_COMMIT_MESSAGE }}
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ env.GITHUB_SHA }}
-      - name: Get head commit message
-        id: get_head_commit_message
-        run: echo "HEAD_COMMIT_MESSAGE=$(git show -s --format=%s)" >> "$GITHUB_OUTPUT"
-
-
-  test-skip:
-    name: Nothin
+  test-gala:
+    name: Gala
     runs-on: "ubuntu-latest"
-    needs: check_skip_flags
-    if: ${{ ! contains(needs.check_skip_flags.outputs.head-commit-message, '[skip tests]') }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Sup
+      - name: Setup Linux
         run: |
-          echo "Testing"
-          echo "${{ needs.check_skip_flags.outputs.head-commit-message}}"
+          sudo apt-get install gsl-bin libgsl0-dev
+
+      - uses: actions/setup-python@v5
+        name: Install Python
+        with:
+          python-version: "3.12"
+
+      - name: Install Gala
+        run: |
+          wget https://github.com/adrn/gala/actions/runs/10567888098/artifacts/1856791728 -O gala.tar.gz
+          tar -xzf gala.tar.gz
+          pip install -v gala-1.9.1.dev2-cp312-cp312-manylinux_2_28_x86_64.whl
+        # run: |
+        #   pip install -v gala
+
+      - name: Test import
+        run: |
+          python -c "import gala.potential as gp; pot = gp.PowerLawCutoffPotential(m=1.0, alpha=1.0, r_c=1.0); print(pot.energy([1.0, 0.0, 0.0]))"
+          echo "Done"
+
+  # check_skip_flags:
+  #   name: Check skip flags
+  #   runs-on: ubuntu-latest
+  #   outputs:
+  #     head-commit-message: ${{ steps.get_head_commit_message.outputs.HEAD_COMMIT_MESSAGE }}
+  #   steps:
+  #     - name: Checkout repo
+  #       uses: actions/checkout@v3
+  #       with:
+  #         ref: ${{ env.GITHUB_SHA }}
+  #     - name: Get head commit message
+  #       id: get_head_commit_message
+  #       run: echo "HEAD_COMMIT_MESSAGE=$(git show -s --format=%s)" >> "$GITHUB_OUTPUT"
+
+
+  # test-skip:
+  #   name: Nothin
+  #   runs-on: "ubuntu-latest"
+  #   needs: check_skip_flags
+  #   if: ${{ ! contains(needs.check_skip_flags.outputs.head-commit-message, '[skip tests]') }}
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
+
+  #     - name: Sup
+  #       run: |
+  #         echo "Testing"
+  #         echo "${{ needs.check_skip_flags.outputs.head-commit-message}}"
