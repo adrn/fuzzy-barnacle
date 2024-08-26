@@ -36,7 +36,7 @@ jobs:
       - name: what
         run: |
           ls -l
-          pip instsall -v gala-1.9.1.dev2-cp312-cp312-manylinux_2_28_x86_64.whl
+          pip install -v gala-1.9.1.dev2-cp312-cp312-manylinux_2_28_x86_64.whl
 
       # - name: Install Gala
       #   run: |
