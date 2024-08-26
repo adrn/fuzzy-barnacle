@@ -26,13 +26,19 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install Gala
+      - uses: actions/download-artifact@v4
+        with:
+          name: wheels-ubuntu-latest-3
+          github-token: ${{ secrets.GALA_TOKEN }}
+          repository: adrn/gala
+          run-id: 10567888098
+
+      - name: what
         run: |
-          wget https://github.com/adrn/gala/actions/runs/10567888098/artifacts/1856791728 -O gala.tar.gz
-          tar -xzf gala.tar.gz
-          pip install -v gala-1.9.1.dev2-cp312-cp312-manylinux_2_28_x86_64.whl
-        # run: |
-        #   pip install -v gala
+          ls -l
+      # - name: Install Gala
+      #   run: |
+      #     pip install -v gala
 
       - name: Test import
         run: |
