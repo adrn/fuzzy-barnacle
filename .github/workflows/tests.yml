@@ -32,7 +32,7 @@ jobs:
 
       - name: Test import
         run: |
-          python -c "import gala.potential as gp"
+          python -c "import gala.potential as gp; pot = gp.PowerLawCutoffPotential(m=1.0, alpha=1.0, r_c=1.0); print(pot.energy([1.0, 0.0, 0.0]))"
           echo "Done"
 
   # test-skip:
