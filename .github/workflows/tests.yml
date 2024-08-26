@@ -9,15 +9,41 @@ on:
   pull_request:
 
 jobs:
-  tests:
-    name: Nothin
+  test-gala:
+    name: Gala
     runs-on: "ubuntu-latest"
-    if: ${{ ! contains(github.event.head_commit.message, '[skip tests]') }}
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Sup
+      - name: Setup Linux
         run: |
-          echo "Testing"
+          sudo apt-get install gsl-bin libgsl0-dev
+
+      - uses: actions/setup-python@v5
+        name: Install Python
+        with:
+          python-version: "3.11"
+
+      - name: Install Gala
+        run: |
+          pip install gala
+
+      - name: Test import
+        run: |
+          python -c "import gala.potential as gp"
+          echo "Done"
+
+  # test-skip:
+  #   name: Nothin
+  #   runs-on: "ubuntu-latest"
+  #   if: ${{ ! contains(github.event.head_commit.message, '[skip tests]') }}
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
+
+  #     - name: Sup
+  #       run: |
+  #         echo "Testing"
