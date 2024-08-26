@@ -28,7 +28,7 @@ jobs:
 
       - name: Install Gala
         run: |
-          pip install gala
+          pip install -v gala
 
       - name: Test import
         run: |
